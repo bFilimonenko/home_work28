@@ -194,7 +194,7 @@ async function showOrderForm() {
   });
 }
 
-document.querySelector("#finishOrder").addEventListener("click", (event) => {
+document.querySelector("#finishOrder").addEventListener("click", () => {
   const name = document.forms.order.name.value.trim();
   const phone = document.forms.order.phone.value.trim();
   const region = document.forms.order.region.selectedOptions[0].label;
@@ -206,9 +206,12 @@ document.querySelector("#finishOrder").addEventListener("click", (event) => {
     return;
   }
 
+  //Validation
+  const namePattern = /^[A-Za-zА-Яа-яЁёІіЇїЄє]{2,25} ?[A-Za-zА-Яа-яЁёІіЇїЄє]{2,25}?$/;
+  const phonePattern = /^\+?3?8?(0[\s-]?\d{2}[\s-]?\d{3}[\s-]?\d{2}[\s-]?\d{2})$/;
   if (
-    !name ||
-    !phone ||
+    !name || !namePattern.test(name) ||
+    !phone || !phonePattern.test(phone) ||
     isNaN(parseInt(phone)) ||
     phone.length < 13 ||
     region === "Select your region" ||
