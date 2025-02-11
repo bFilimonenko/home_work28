@@ -189,30 +189,22 @@ async function showOrderForm() {
     novaPostService.getCitiesByRegion(event.target.value, (param) => renderOptions("city", param));
   });
   cityInput.addEventListener("change", (event) => {
+    console.log(event.target.value);
     novaPostService.getWarehouseByCity(event.target.value, (param) => renderOptions("warehouse", param));
   });
 }
 
 document.querySelector("#finishOrder").addEventListener("click", () => {
-
-  if (order.length === 0) {
-    showWarningNotification("Your cart is empty");
-    return;
-  }
-
-  if (dataCollection()) {
-    showSuccessNotification();
-  } else {
-    showWarningNotification("Please fill in all fields correctly");
-  }
-});
-
-function dataCollection() {
   const name = document.forms.order.name.value.trim();
   const phone = document.forms.order.phone.value.trim();
   const region = document.forms.order.region.selectedOptions[0].label;
   const city = document.forms.order.city.selectedOptions[0].label;
   const warehouse = document.forms.order.warehouse.selectedOptions[0].label;
+
+  if (order.length === 0) {
+    showWarningNotification("Your cart is empty");
+    return;
+  }
 
   //Validation
   const namePattern = /^[A-Za-zА-Яа-яЁёІіЇїЄє]{2,25} ?[A-Za-zА-Яа-яЁёІіЇїЄє]{2,25}?$/;
@@ -226,10 +218,10 @@ function dataCollection() {
     city === "Select your city" ||
     warehouse === "Select your warehouse"
   ) {
-    return false;
+    showWarningNotification("Please fill in all fields correctly");
+    return;
   }
 
-  //Saving data
   const clientData = {
     name: name,
     phone: phone,
@@ -237,10 +229,11 @@ function dataCollection() {
     city: city,
     warehouse: warehouse
   };
+
   localStorage.setItem("clientData", JSON.stringify(clientData));
 
-  return true;
-}
+  showSuccessNotification();
+});
 
 function showWarningNotification(message) {
   const notification = document.querySelector(".notification.warning");
