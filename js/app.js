@@ -195,16 +195,23 @@ async function showOrderForm() {
 }
 
 document.querySelector("#finishOrder").addEventListener("click", () => {
-  const name = document.forms.order.name.value.trim();
-  const phone = document.forms.order.phone.value.trim();
-  const region = document.forms.order.region.selectedOptions[0].label;
-  const city = document.forms.order.city.selectedOptions[0].label;
-  const warehouse = document.forms.order.warehouse.selectedOptions[0].label;
 
   if (order.length === 0) {
     showWarningNotification("Your cart is empty");
     return;
   }
+
+  dataCollection();
+
+  showSuccessNotification();
+});
+
+function dataCollection() {
+  const name = document.forms.order.name.value.trim();
+  const phone = document.forms.order.phone.value.trim();
+  const region = document.forms.order.region.selectedOptions[0].label;
+  const city = document.forms.order.city.selectedOptions[0].label;
+  const warehouse = document.forms.order.warehouse.selectedOptions[0].label;
 
   //Validation
   const namePattern = /^[A-Za-zА-Яа-яЁёІіЇїЄє]{2,25} ?[A-Za-zА-Яа-яЁёІіЇїЄє]{2,25}?$/;
@@ -222,6 +229,7 @@ document.querySelector("#finishOrder").addEventListener("click", () => {
     return;
   }
 
+  //Saving data
   const clientData = {
     name: name,
     phone: phone,
@@ -229,11 +237,8 @@ document.querySelector("#finishOrder").addEventListener("click", () => {
     city: city,
     warehouse: warehouse
   };
-
   localStorage.setItem("clientData", JSON.stringify(clientData));
-
-  showSuccessNotification();
-});
+}
 
 function showWarningNotification(message) {
   const notification = document.querySelector(".notification.warning");
